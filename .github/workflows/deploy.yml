@@ -20,12 +20,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Install dependencies (if any)
+      # Install Poetry
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      # Install dependencies using Poetry
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Add a requirements.txt file if needed
-          pip install pytest pytest-cov  # Install pytest and pytest-cov for testing
+          poetry install
+
+      # # Install dependencies (if any)
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt  # Add a requirements.txt file if needed
+      #     pip install pytest pytest-cov  # Install pytest and pytest-cov for testing
 
       # Run tests using the Makefile
       - name: Run tests
@@ -34,7 +44,7 @@ jobs:
       # Zip the Lambda function code
       - name: Zip Lambda function code
         run: |
-          zip lambda_function_payload.zip lambda_function.py
+          zip src/number_lambda.zip index.py
 
       # Set up Terraform
       - name: Set up Terraform
@@ -42,26 +52,26 @@ jobs:
         with:
           terraform_version: "1.5.0"  # Use the latest stable version
 
-      # Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Change to your preferred region
+      # # Configure AWS credentials  TODO: Set up Terraform
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v3
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-east-1  # Change to your preferred region
 
-      # Initialize Terraform
-      - name: Terraform Init
-        run: terraform init
+      # # Initialize Terraform
+      # - name: Terraform Init
+      #   run: terraform init
 
-      # Validate Terraform configuration
-      - name: Terraform Validate
-        run: terraform validate
+      # # Validate Terraform configuration
+      # - name: Terraform Validate
+      #   run: terraform validate
 
-      # Plan Terraform changes
-      - name: Terraform Plan
-        run: terraform plan
+      # # Plan Terraform changes
+      # - name: Terraform Plan
+      #   run: terraform plan
 
-      # Apply Terraform changes
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      # # Apply Terraform changes
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve

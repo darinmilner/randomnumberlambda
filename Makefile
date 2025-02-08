@@ -1,4 +1,4 @@
-PYTEST = pytest
+PYTEST = poetry run pytest
 COVERAGE = --cov=src --cov-report=term --cov-report=html:coverage_report
 
 # Default target
