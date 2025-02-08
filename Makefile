@@ -13,7 +13,7 @@ test:
 # Clean up any temporary files or outputs
 clean:
 	@echo "Cleaning up..."
-	@rm -rf __pycache__ .pytest_cache coverage_report .coverage
+	@rm -rf __pycache__ .pytest_cache coverage_report .coverage src/number_lambda.zip
 	@echo "Cleanup complete."
 
 # Phony targets (targets that are not actual files)
