@@ -44,7 +44,7 @@ jobs:
       # Zip the Lambda function code
       - name: Zip Lambda function code
         run: |
-          zip src/number_lambda.zip index.py
+          zip src/number_lambda.zip src/index.py
 
       # Set up Terraform
       - name: Set up Terraform
