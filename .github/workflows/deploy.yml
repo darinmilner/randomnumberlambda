@@ -39,12 +39,13 @@ jobs:
 
       # Run tests using the Makefile
       - name: Run tests
-        run: make test
+        run: |
+          make test
 
       # Zip the Lambda function code
       - name: Zip Lambda function code
         run: |
-          zip src/number_lambda.zip src/index.py
+          poetry run make zip
 
       # Set up Terraform
       - name: Set up Terraform

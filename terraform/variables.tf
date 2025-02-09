@@ -4,6 +4,12 @@ variable "lambda_name" {
   default     = "RandomNumberLambda"
 }
 
+variable "lambda_zip" {
+  type        = string
+  description = "Name of the Lambda zip file"
+  default     = "numberLambda"
+}
+
 variable "region" {
   type        = string
   description = "AWS Region"

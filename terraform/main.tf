@@ -43,14 +43,14 @@ resource "aws_iam_role_policy" "lambda_logs_policy" {
 
 # Lambda Function
 resource "aws_lambda_function" "random_number_lambda" {
-  function_name = "RandomNumberLambda"
+  function_name = var.lambda_name
   handler       = "index.lambda_handler"
   runtime       = "python3.11"
   role          = aws_iam_role.lambda_role.arn
 
   # Path to the zipped Lambda function code
-  filename         = "src/${var.lambda_name}.zip"
-  source_code_hash = filebase64sha256("src/lambda_function_payload.zip")
+  filename         = "src/${var.lambda_zip}.zip"
+  source_code_hash = filebase64sha256("src/${var.lambda_zip}.zip")
 
   environment {
     variables = {
