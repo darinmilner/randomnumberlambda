@@ -1,7 +1,7 @@
 PYTEST = poetry run pytest
 COVERAGE = --cov=src --cov-report=term --cov-report=html:coverage_report
-LAMBDA_ZIP = src/numberLambda.zip
-LAMBDA_SOURCE = index.py
+LAMBDA_ZIP = numberLambda.zip
+LAMBDA_SOURCE = src/index.py
 
 # Default target
 all: test zip
