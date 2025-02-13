@@ -1,9 +1,13 @@
 name: Deploy Lambda to AWS
 
+
 on:
-  push:
-    branches:
-      - master  # Trigger on push to the main branch
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+# on:
+#   push:
+#     branches:
+#       - master  # Trigger on push to the main branch
 
 jobs:
   test-and-deploy:
@@ -47,32 +51,46 @@ jobs:
         run: |
           poetry run make zip
 
+      # Upload the coverage report to S3 using the Makefile
+      - name: Upload coverage report to S3
+        run: |
+          poetry run make upload-coverage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+
+      # Clean up unneeded files
+      - name: Clean files
+        run: |
+          poetry run make clean
+
       # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: "1.5.0"  # Use the latest stable version
 
-      # # Configure AWS credentials  TODO: Set up Terraform
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1  # Change to your preferred region
+      # Configure AWS credentials  TODO: Set up Terraform
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Change to your preferred region
 
-      # # Initialize Terraform
-      # - name: Terraform Init
-      #   run: terraform init
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
 
-      # # Validate Terraform configuration
-      # - name: Terraform Validate
-      #   run: terraform validate
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
 
-      # # Plan Terraform changes
-      # - name: Terraform Plan
-      #   run: terraform plan
+      # Plan Terraform changes
+      - name: Terraform Plan
+        run: terraform plan
 
-      # # Apply Terraform changes
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve
+      # Apply Terraform changes
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
